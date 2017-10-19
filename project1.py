@@ -6,24 +6,18 @@ import sys
 
 '''
 To do list:
-
 Fix D error handling. How to keep prompting when path does not exist?
-
 A get all from previous step
 N get all with name (How to get path from file name?)
 E fix .pdf vs pdf
 T Text in a file
 < Done
 > Done
-
 AFTER INTERESTING FILES FOUND
 F
 D
 T
-
 check possiblity for errors
-
-
 '''
 
 
@@ -210,7 +204,12 @@ def print_first_line_of_text_file(file_list) -> list:
 
                 x = q.readlines()
 
-                first_lines.append(x[0])
+                if x == []:
+                    pass
+
+                else:
+
+                    first_lines.append(x[0])
 
             except UnicodeDecodeError:
                 pass
@@ -332,7 +331,5 @@ def primary_search():
 
 
 primary_search()
-
-
 
 
