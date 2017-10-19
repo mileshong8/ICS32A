@@ -233,7 +233,7 @@ def touch_file(file_list: list) -> None:
         f.touch()
 
 
-def actions_commands(file_list: list) -> None:
+def actions_commands(file_list: list) -> bool:
     actions_input = input()
     if actions_input == "F":
         if print_first_line_of_text_file(file_list) == []:
@@ -243,19 +243,21 @@ def actions_commands(file_list: list) -> None:
             for line in print_first_line_of_text_file(file_list):
                 print(line)
 
-            sys.exit()
+            return True
 
     if actions_input == "D":
         copy_files(file_list)
-        sys.exit()
+        #sys.exit()
+        return True
 
     if actions_input == "T":
         touch_file(file_list)
-        sys.exit()
+        #sys.exit()
+        return True
 
     else:
         print("ERROR")
-        actions_commands(file_list)
+        return actions_commands(file_list)
 
 
 
@@ -263,51 +265,55 @@ def actions_commands(file_list: list) -> None:
 
 
 
-def narrow_search_commands(file_list: list) -> None:
+
+def narrow_search_commands(file_list: list) -> bool:
     narrow_search_input = input()
     narrow_search_input_valid = False
     #while narrow_search_input_valid == False:
     if narrow_search_input == "A":
         print_list(from_previous_step(file_list))
 
-        actions_commands(from_previous_step(file_list))
+        return actions_commands(from_previous_step(file_list))
+
 
     elif narrow_search_input[0:2] == "N ":
         print_list(name_search(file_list, narrow_search_input[2:]))
 
 
-        actions_commands(name_search(file_list, narrow_search_input[2:]))
+        return actions_commands(name_search(file_list, narrow_search_input[2:]))
 
     elif narrow_search_input[0:2] == "E ":
         print_list(extension_search(file_list, narrow_search_input[2:]))
 
-        actions_commands(extension_search(file_list, narrow_search_input[2:]))
+        return actions_commands(extension_search(file_list, narrow_search_input[2:]))
 
 
     elif narrow_search_input[0:2] == "T ":
         print_list(text_search(file_list, narrow_search_input[2:]))
 
-        actions_commands(text_search(file_list, narrow_search_input[2:]))
+        return actions_commands(text_search(file_list, narrow_search_input[2:]))
 
 
     elif narrow_search_input[0:2] == "< ":
         print_list(less_than_search(file_list, int(narrow_search_input[2:])))
 
-        actions_commands(less_than_search(file_list, int(narrow_search_input[2:])))
+        return actions_commands(less_than_search(file_list, int(narrow_search_input[2:])))
 
     elif narrow_search_input[0:2] == "> ":
         print_list(greater_than_search(file_list, int(narrow_search_input[2:])))
 
-        actions_commands(greater_than_search(file_list, int(narrow_search_input[2:])))
+        return actions_commands(greater_than_search(file_list, int(narrow_search_input[2:])))
 
     else:
         print("ERROR")
-        narrow_search_commands(file_list)
+        return narrow_search_commands(file_list)
+
 
 def primary_search():
     input_valid = False
     first_user_input = input()
-    while input_valid == False:
+    is_complete = False
+    while input_valid == False and is_complete == False:
         # List all the files in that directory. No subdirectories
 
 
@@ -316,7 +322,7 @@ def primary_search():
             print_list(get_directory_list(first_user_input[2:], False))
 
             input_valid = True
-            narrow_search_commands(get_directory_list(first_user_input[2:], False))
+            is_complete = narrow_search_commands(get_directory_list(first_user_input[2:], False))
 
         # Recursive so all files until you get the last one
         elif first_user_input[0:2] == "R ":
@@ -324,10 +330,12 @@ def primary_search():
             print_list(get_directory_list_from_all_subdirs(first_user_input[2:]))
 
             input_valid = True
-            narrow_search_commands(get_directory_list_from_all_subdirs(first_user_input[2:]))
+            is_complete = narrow_search_commands(get_directory_list_from_all_subdirs(first_user_input[2:]))
         else:
             print("ERROR")
             primary_search()
+
+    sys.exit()
 
 
 primary_search()
